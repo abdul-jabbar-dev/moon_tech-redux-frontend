@@ -24,7 +24,7 @@ const ProductCard = ({ product }) => {
       <div className=' flex-1'>
         <ul className='space-y-2'>
           {
-            product['Key Feature'].map((item, i) => <li key={i} className='text-sm '>
+            product['Key Feature'].length&& product['Key Feature']?.map((item, i) => <li key={i} className='text-sm '>
               {Object.keys(item)[0] + ": " + Object.values(item)[0]}
             </li>)
           }

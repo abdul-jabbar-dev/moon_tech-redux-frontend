@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { BsPlusCircleDotted } from "react-icons/bs"
+import { useDispatch } from "react-redux";
+import { LOAD_DATA } from "../../reducer/types/TYPES";
 const AddProduct = () => {
+  const dispatch = useDispatch()
   const { register, handleSubmit, getValues, setValue } = useForm();
   const [featureCount, setFeatureCount] = useState(1);
+
   const submit = (data) => {
 
     const FeatureValue = Object.entries(getValues()).filter(([key, value]) => key.startsWith('singleFeaturV'));
@@ -16,7 +20,7 @@ const AddProduct = () => {
       'Key Feature': newObj
     };
     Object.keys(getValues()).filter(k => k.startsWith('singleFeatur') && delete product[k])
-    console.log(product)
+    dispatch({ type: LOAD_DATA.ADD_DATA_LOCAL, payload: product })
   };
 
   return (
@@ -29,50 +33,47 @@ const AddProduct = () => {
           <label className='mb-2' htmlFor='Title'>
             Title
           </label>
-          <input className="bg-gray-200" type='text' id='Title' {...register("Title")} />
+          <input className="border-gray-200 border" type='text' id='Title' {...register("Title")} />
         </div>
         <div className='flex flex-col w-full max-w-xs'>
           <label className='mb-2' htmlFor='image'>
             Image
           </label>
-          <input className="bg-gray-200" type='text' name='image' id='image' {...register("image")} />
+          <input className="border-gray-200 border" type='text' name='image' id='image' {...register("image")} />
         </div>
 
         <div className='flex flex-col w-full max-w-xs'>
           <label className='mb-2' htmlFor='graph'>
-          Graphics
+            Graphics
           </label>
-          <input className="bg-gray-200" type='text' name='Graphics' id='graph' {...register("Graphics")} />
+          <input className="border-gray-200 border" type='text' name='Graphics' id='graph' {...register("Graphics")} />
         </div>
 
         <div className='flex flex-col w-full max-w-xs'>
           <label className='mb-3' htmlFor='Brand'>
             Brand
           </label>
-          <select name='Brand' id='Brand' {...register("Brand")}>
-            <option value='amd'>AMD</option>
-            <option value='intel'>Intel</option>
-          </select>
+          <input id='Brand' className="border-gray-200 border" name='Brand' type="text"  {...register("Brand")} />
         </div>
 
         <div className='flex flex-col w-full max-w-xs'>
           <label className='mb-2' htmlFor='Price'>
             Price
           </label>
-          <input className="bg-gray-200" type='text' name='Price' id='Price' {...register("Price")} />
+          <input className="border-gray-200 border" type='text' name='Price' id='Price' {...register("Price")} />
         </div>
 
         <div className='flex flex-col w-full max-w-xs'>
- 
+
           <div className='flex gap-3'>
             <div>
               <label className='mb-2 flex  justify-between items-center ' htmlFor='quantity'>
-              Quantity
+                Quantity
               </label>
               <input
                 type='text'
-                className="bg-gray-200 w-full pl-2 "
-                id='quantity' 
+                className="border-gray-200 border w-full pl-2 "
+                id='quantity'
                 {...register("stock")}
               />
             </div>
@@ -90,14 +91,14 @@ const AddProduct = () => {
             [...Array(featureCount)].map((counters, counter) => <div key={counter} className="flex gap-3 my-1">
               <input
                 type='text'
-                className="bg-gray-200 w-[40%] pl-2 "
+                className="border-gray-200 border w-[40%] pl-2 "
                 name={'singleFeaturKey' + counter}
                 placeholder={"Key" + counter}
                 id={'singleFeaturKey' + counter}
                 {...register("singleFeaturKey" + counter)}
               /> <input
                 type='text'
-                className="bg-gray-200 w-[60%] pl-2 "
+                className="border-gray-200 border w-[60%] pl-2 "
                 name={'singleFeaturValue' + counter}
                 placeholder={"Value" + counter}
                 id={'singleFeaturValue' + counter}

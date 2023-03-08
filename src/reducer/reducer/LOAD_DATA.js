@@ -18,8 +18,13 @@ const load_fetch_data = (state = initial, action) => {
                 products: action.payload,
                 isFatching: false
             }
+        case LOAD_DATA.ADD_DATA_LOCAL:
+            return {
+                products: [...state.products, action.payload],
+                isFatching: false
+            }
         default:
-           return state;
+            return state;
     }
 }
 export default load_fetch_data
