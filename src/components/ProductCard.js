@@ -3,8 +3,8 @@ import { BiListPlus } from "react-icons/bi";
 
 import { useLocation } from "react-router-dom";
 import { MdDeleteForever } from "react-icons/md";
-import { useDispatch } from 'react-redux'
-import { CART_TYPE } from "../reducer/types/TYPES";
+import { useDispatch } from "react-redux";
+import { ADDTOCART, DELETEFROMCART, REMOVEFROMCART } from "../rtk/fetures/cart/cartSlice";
 
 const ProductCard = ({ product }) => {
   const dispatch = useDispatch()
@@ -12,7 +12,7 @@ const ProductCard = ({ product }) => {
   return (
     <div className='shadow-lg relative rounded-3xl border p-3 flex flex-col text-indigo-900'>
       {pathname.includes("cart") && (
-        <button onClick={e => dispatch({ type: CART_TYPE.DELETE_ITEM_FROM_CART, payload: product })} style={{ backgroundSize: '15px' }} className='rounded-full group/close hover: hover:bg-[url("https://cdn-icons-png.flaticon.com/512/1828/1828666.png")] hover:bg-no-repeat hover:bg-center hover:bg-contain grid place-items-center absolute top-2 right-2 bg-indigo-500 text-white h-8 w-8 font-bold '>
+        <button style={{ backgroundSize: '15px' }} onClick={(e) => dispatch(DELETEFROMCART(product))} className='rounded-full group/close hover: hover:bg-[url("https://cdn-icons-png.flaticon.com/512/1828/1828666.png")] hover:bg-no-repeat hover:bg-center hover:bg-contain grid place-items-center absolute top-2 right-2 bg-indigo-500 text-white h-8 w-8 font-bold '>
           <p className="group-hover/close:hidden  "> {product.cartQuantity} </p>
         </button>
       )}
@@ -24,7 +24,7 @@ const ProductCard = ({ product }) => {
       <div className=' flex-1'>
         <ul className='space-y-2'>
           {
-            product['Key Feature'].length&& product['Key Feature']?.map((item, i) => <li key={i} className='text-sm '>
+            product['Key Feature'].length && product['Key Feature']?.map((item, i) => <li key={i} className='text-sm '>
               {Object.keys(item)[0] + ": " + Object.values(item)[0]}
             </li>)
           }
@@ -34,7 +34,7 @@ const ProductCard = ({ product }) => {
       <div className='flex gap-2 mt-5'>
         {!pathname.includes("cart") && (
           <button
-            onClick={e => dispatch({ type: CART_TYPE.ADD_TO_CART, payload: product })}
+            onClick={(e) => dispatch(ADDTOCART(product))}
             className='bg-indigo-500 rounded-full py-1 px-2 flex-1 text-white text-bold'
           >
             Add to cart
@@ -52,7 +52,7 @@ const ProductCard = ({ product }) => {
         {pathname.includes("cart") && (
           <button
             title='Remove'
-            onClick={(e) => dispatch({ type: CART_TYPE.REMOVE_FROM_CART, payload: product })}
+            onClick={(e) => dispatch(REMOVEFROMCART(product))}
             className='flex justify-between px-3 bg-red-500 text-white p-1 rounded-full flex-1'
           >
             <p>Remove</p>

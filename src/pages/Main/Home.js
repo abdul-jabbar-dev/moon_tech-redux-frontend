@@ -1,30 +1,32 @@
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import ProductCard from "../../components/ProductCard";
-import loadData from "../../reducer/middlewares/thunk/loadData";
-import { FILTER_TYPE } from "../../reducer/types/TYPES";
 import Loader from "../../utils/Loader";
+import { useDispatch, useSelector } from "react-redux";
+import { TOGGOLESTOCK, SETBRANDS } from "../../rtk/fetures/filter/filterslice";
+import { getAllProductByFetch } from "../../rtk/fetures/products/products";
 
 const Home = () => {
-  useEffect(() => {
-    dispatch(loadData())
-  }, []);
-  const { products,isFatching } = useSelector(state => state.loaded_Products)
-  console.log(isFatching)
   const activeClass = "text-white  bg-indigo-500 border-white";
   const outOfStockClass = "text-purple-600  bg-purple-100  border-purple-300";
-  const dispatch = useDispatch();
-  const { filters: { brands, stock: stocks }, keywords } = useSelector(state => state.filter_store)
-
-
-  let filteredProducts = <Loader></Loader>;
+  const dispatch = useDispatch()
+  const { products,isLoading} = useSelector(state => state.apiProducts)
+  const { stock, brands } = useSelector(state => state.filters)
   
+  useEffect(() => {
+    dispatch(getAllProductByFetch())
+  }, [])
+
+  let filteredProducts = isLoading&&<Loader></Loader>;
+
   if (products.length) {
     filteredProducts = products.map((product) => (
       <ProductCard key={product._id} product={product} />
     ))
   }
-  if (products.length && (stocks || brands.length)) {
+
+
+
+  if (products.length && (stock || brands.length)) {
     filteredProducts = products
       .filter(item => {
         if (brands.length) {
@@ -33,7 +35,7 @@ const Home = () => {
         return item
       })
       .filter(item => {
-        if (stocks) {
+        if (stock) {
           return item.stock !== 0
         }
         return item
@@ -48,24 +50,20 @@ const Home = () => {
     <div className="max-w-7xl gap-14 mx-auto my-10">
       <div className="mb-10 flex justify-end gap-5">
         <button
-          onClick={(e) =>
-            dispatch({ type: FILTER_TYPE.TOGGLE_STOCK })
-          }
-          className={`border px-3 py-2 rounded-full font-semibold  ${stocks ? activeClass : outOfStockClass} `}
+          onClick={e => dispatch(TOGGOLESTOCK())}
+
+          className={`border px-3 py-2 rounded-full font-semibold  ${stock ? activeClass : outOfStockClass} `}
         >
-          {!stocks ? "In Stock" : "All Items"}
+          {!stock ? "In Stock" : "All Items"}
         </button>
         <button
-          onClick={(e) =>
-            dispatch({ type: FILTER_TYPE.TOGGLE_BRAND, payload: "amd" })
-          }
+          onClick={e => dispatch(SETBRANDS("amd"))}
           className={`border px-3 py-2 rounded-full font-semibold ${brands.includes('amd') ? activeClass : null}`}
         >
           AMD
         </button>
-        <button onClick={(e) =>
-          dispatch({ type: FILTER_TYPE.TOGGLE_BRAND, payload: "intel" })
-        }
+        <button
+          onClick={e => dispatch(SETBRANDS("intel"))}
           className={`border px-3 py-2 rounded-full font-semibold ${brands.includes('intel') ? activeClass : null}`}>
           Intel
         </button>
